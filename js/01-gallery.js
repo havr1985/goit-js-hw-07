@@ -19,8 +19,34 @@ container.addEventListener('click', onClick);
 
 function onClick(event) {
     event.preventDefault();
-    const { target } = event;
+  const { target } = event;
+  
+  if (target.nodeName !== "IMG") {
+    return;
+  }
 
-    const originalUrl = target.dataset.source;
-    console.log(originalUrl);
+  const originalUrl = target.dataset.source;
+  const currentImg = galleryItems.find(({ original }) => original === originalUrl);
+    const instance = basicLightbox.create(`
+    <div class="modal">
+        <img
+      class="gallery__image"
+      src="${originalUrl}"
+      alt="${currentImg.description}"
+    />
+    </div>
+`)
+
+  instance.show();
+  document.addEventListener('keydown', closeEscape);
+
+  function closeEscape(event) {
+  if (event.code === "Escape") {
+    instance.close();
+    document.removeEventListener('keydown', closeEscape);
+  }
+
 }
+}
+
+
